@@ -5,8 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import androidx.navigation.fragment.findNavController
 import com.example.backapp.databinding.FragmentSecondBinding
+import androidx.core.app.ActivityCompat.requestPermissions
+
+import android.content.pm.PackageManager
+
+
+
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -23,9 +31,16 @@ class SecondFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val view = inflater.inflate(R.layout.fragment_second,container,false)
+        val listView: ListView = view.findViewById(R.id.messageList)
 
+        val aa = ArrayAdapter<String>(requireActivity(), android.R.layout.simple_expandable_list_item_1, (activity as MainActivity).getSMS())
+        listView.adapter = aa
+        /**
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding.root*/
+        return view
+
 
     }
 

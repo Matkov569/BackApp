@@ -20,30 +20,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
-                style="@style/messageLeft"
-                android:text="Wiadomość 1" />
+            <ListView
+                android:id="@+id/messageList"
+                android:layout_width="match_parent"
+                android:layout_height="446dp" />
 
-            <TextView
-                android:id="@+id/textView3"
-                style="@style/messageRight"
-                android:text="Wiadomość 2, która też powinna być dłuższa, niczym wiadomość 5" />
-
-            <TextView
-                android:id="@+id/textView5"
-                style="@style/messageLeft"
-                android:text="Wiadomość 3" />
-
-            <TextView
-                android:id="@+id/textView6"
-                style="@style/messageRight"
-                android:text="Wiadomość 4" />
-
-            <TextView
-                android:id="@+id/textView7"
-                style="@style/messageLeft"
-                android:text="Bardzo długa wiadomość o numerze 5, która powinna  dosięgnąć końca ekranu i się załamać." />
         </LinearLayout>
     </ScrollView>
 
