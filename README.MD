@@ -1,11 +1,11 @@
-#BackApp, aplikacja do sms
+# BackApp, aplikacja do sms
 
-##funcje:
+## funcje:
  - Wyświetlanie sms w formie listy
  - Pytanie usera o udzielenie uprawnień
  - pobieranie listy smsów ze skrzynki
 
-##Co trzeba dodać
+## Co trzeba dodać
  - aplikacja wywołuję zapytanie o listę sms 1 raz w metodzie onCreate, trzeba to zmienić na odpytywanie np co 1 sekundę
  - aplikacja pyta o zgody raz, trzeba dodać sprawdzanie zgód w runtime
 
