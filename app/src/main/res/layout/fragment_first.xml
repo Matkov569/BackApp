@@ -57,10 +57,6 @@
                     app:srcCompat="@drawable/ic_launcher_foreground"
                     android:src="@mipmap/ic_launcher"/>
 
-                <TextView
-                    android:id="@+id/textView8"
-                    style="@style/contactName"
-                    android:text="Adam Mickiewicz" />
             </TableRow>
         </LinearLayout>
     </ScrollView>

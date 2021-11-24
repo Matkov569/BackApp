@@ -10,11 +10,20 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import com.example.backapp.databinding.ActivityMainBinding
+import android.database.Cursor
+import android.net.Uri
+import android.util.Log
+import androidx.core.content.ContextCompat
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
-
+        setupPermissions()
 
     }
 
@@ -52,4 +61,51 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
+
+    fun getSMS(): List<String> {
+        val sms: MutableList<String> = ArrayList()
+        val uriSMSURI = Uri.parse("content://sms/inbox")
+        val cur: Cursor? = contentResolver.query(uriSMSURI, null, null, null, null)
+        while (cur != null && cur.moveToNext()) {
+            val address = cur.getString(cur.getColumnIndexOrThrow("address"))
+            val body = cur.getString(cur.getColumnIndexOrThrow("body"))
+            sms.add("Number: $address .Message: $body")
+        }
+        if (cur != null) {
+            cur.close()
+        }
+        return sms
+    }
+
+    private fun setupPermissions() {
+        val permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_SMS)
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            Log.i("PermissionDemo", "Permission to record denied")
+        }
+        makeRequest()
+    }
+
+    private fun makeRequest() {
+        ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.READ_SMS),
+                101)
+    }
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                             permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            101 -> {
+
+                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.i("PermissionDemo", "Permission has been denied by user")
+                } else {
+                    Log.i("PermissionDemo", "Permission has been granted by user")
+                }
+            }
+        }
+    }
+
 }
