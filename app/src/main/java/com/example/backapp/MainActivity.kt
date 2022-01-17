@@ -64,8 +64,8 @@ class MainActivity : AppCompatActivity() {
 
     fun getSMS(): List<String> {
         val sms: MutableList<String> = ArrayList()
-        val uriSMSURI = Uri.parse("content://sms/inbox")
-        val cur: Cursor? = contentResolver.query(uriSMSURI, null, null, null, null)
+        val uriSMSURIin = Uri.parse("content://sms/inbox")
+        val cur: Cursor? = contentResolver.query(uriSMSURIin, null, null, null, null)
         while (cur != null && cur.moveToNext()) {
             val address = cur.getString(cur.getColumnIndexOrThrow("address"))
             val body = cur.getString(cur.getColumnIndexOrThrow("body"))
@@ -74,6 +74,19 @@ class MainActivity : AppCompatActivity() {
         if (cur != null) {
             cur.close()
         }
+        val uriSMSURIout = Uri.parse("content://sms/inbox")
+        val cur2: Cursor? = contentResolver.query(uriSMSURIin, null, null, null, null)
+        while (cur2 != null && cur2.moveToNext()) {
+            val address = cur2.getString(cur2.getColumnIndexOrThrow("address"))
+            val body = cur2.getString(cur2.getColumnIndexOrThrow("body"))
+            sms.add("Number: $address .Message: $body")
+        }
+        if (cur2 != null) {
+            cur2.close()
+        }
+
+
+
         return sms
     }
 

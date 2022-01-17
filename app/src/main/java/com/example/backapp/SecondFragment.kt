@@ -12,8 +12,8 @@ import com.example.backapp.databinding.FragmentSecondBinding
 import androidx.core.app.ActivityCompat.requestPermissions
 
 import android.content.pm.PackageManager
-
-
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 
 /**
@@ -44,8 +44,16 @@ class SecondFragment : Fragment() {
 
     }
 
+    lateinit var lectureslayoutMenager: LinearLayoutManager
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        view.findViewById<RecyclerView>(R.id.messageList).apply {
+            adapter=smsAdapter(smses)
+            layoutManager=lectureslayoutMenager
+        }
     }
 
     override fun onDestroyView() {
