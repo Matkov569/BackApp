@@ -1,5 +1,6 @@
 package com.example.backapp
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,11 +31,13 @@ class smsAdapter(val smses:List<sms>): RecyclerView.Adapter<smsAdapter.Holder>()
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.Tresc.text=smses[position].body;
-        if(smses[position].sentOrReceived)
-            holder.Card.style(R.style.cardIn) ;
-
-        else
-            holder.Card.style(R.style.cardOut) ;
+        if(smses[position].sentOrReceived) {
+            holder.Card.style(R.style.cardOut);
+            holder.Card.setCardBackgroundColor(Color.parseColor("#8BC34A"));
+        }
+        else {
+            holder.Card.style(R.style.cardIn)
+        }
 
     }
 

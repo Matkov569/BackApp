@@ -31,11 +31,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+        //setSupportActionBar(binding.toolbar)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        //val navController = findNavController(R.id.nav_host_fragment_content_main)
+        //appBarConfiguration = AppBarConfiguration(navController.graph)
+        //setupActionBarWithNavController(navController, appBarConfiguration)
         setupPermissions()
 
     }
@@ -62,39 +62,21 @@ class MainActivity : AppCompatActivity() {
                 || super.onSupportNavigateUp()
     }
 
-    fun getSMS(): List<String> {
-        val sms: MutableList<String> = ArrayList()
-        val uriSMSURIin = Uri.parse("content://sms/inbox")
-        val cur: Cursor? = contentResolver.query(uriSMSURIin, null, null, null, null)
-        while (cur != null && cur.moveToNext()) {
-            val address = cur.getString(cur.getColumnIndexOrThrow("address"))
-            val body = cur.getString(cur.getColumnIndexOrThrow("body"))
-            sms.add("Number: $address .Message: $body")
-        }
-        if (cur != null) {
-            cur.close()
-        }
-        val uriSMSURIout = Uri.parse("content://sms/inbox")
-        val cur2: Cursor? = contentResolver.query(uriSMSURIin, null, null, null, null)
-        while (cur2 != null && cur2.moveToNext()) {
-            val address = cur2.getString(cur2.getColumnIndexOrThrow("address"))
-            val body = cur2.getString(cur2.getColumnIndexOrThrow("body"))
-            sms.add("Number: $address .Message: $body")
-        }
-        if (cur2 != null) {
-            cur2.close()
-        }
-
-
-
-        return sms
-    }
-
     private fun setupPermissions() {
         val permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_SMS)
+        val permission2 = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.RECEIVE_SMS)
+        val permission3 = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.SEND_SMS)
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
+            Log.i("PermissionDemo", "Permission to record denied")
+        }
+        if (permission2 != PackageManager.PERMISSION_GRANTED) {
+            Log.i("PermissionDemo", "Permission to record denied")
+        }
+        if (permission3 != PackageManager.PERMISSION_GRANTED) {
             Log.i("PermissionDemo", "Permission to record denied")
         }
         makeRequest()
@@ -104,12 +86,36 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.READ_SMS),
                 101)
+        ActivityCompat.requestPermissions(this,
+            arrayOf(Manifest.permission.RECEIVE_SMS),
+            102)
+        ActivityCompat.requestPermissions(this,
+            arrayOf(Manifest.permission.SEND_SMS),
+            103)
     }
     override fun onRequestPermissionsResult(requestCode: Int,
                                              permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             101 -> {
+
+                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.i("PermissionDemo", "Permission has been denied by user")
+                } else {
+                    Log.i("PermissionDemo", "Permission has been granted by user")
+                }
+            }
+            102 -> {
+
+                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.i("PermissionDemo", "Permission has been denied by user")
+                } else {
+                    Log.i("PermissionDemo", "Permission has been granted by user")
+                }
+            }
+            103 -> {
 
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
 
