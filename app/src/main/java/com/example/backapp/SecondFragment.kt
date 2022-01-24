@@ -6,22 +6,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import androidx.navigation.fragment.findNavController
 import com.example.backapp.databinding.FragmentSecondBinding
-import androidx.core.app.ActivityCompat.requestPermissions
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.database.Cursor
 import android.net.Uri
 import android.telephony.SmsManager
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.paris.extensions.style
+import com.google.android.material.textfield.TextInputEditText
+
+import android.content.ContentResolver
+
+import android.database.ContentObserver
+import android.os.Handler
+import androidx.lifecycle.Observer
 
 
 /**
@@ -29,7 +30,8 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class SecondFragment : Fragment() {
 
-    lateinit var smses:List<sms>;
+    lateinit var co:SMSObserver;
+    lateinit var contentResolver: ContentResolver;
     lateinit var smsadapter: smsAdapter;
 
     private var _binding: FragmentSecondBinding? = null
@@ -45,11 +47,23 @@ class SecondFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_second,container,false)
         //val listView: ListView = view.findViewById(R.id.messageList)
 
+        val viewModel by activityViewModels<VM>();
 
-        //listView.adapter = aa
-        /**
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
-        return binding.root*/
+        val recyclerView = view.findViewById<RecyclerView>(R.id.messageList);
+        smsadapter = smsAdapter(context, viewModel);
+        recyclerView.adapter = smsadapter
+        var layout = LinearLayoutManager(requireContext())
+        layout.reverseLayout = true
+        recyclerView.layoutManager = layout
+
+        co = SMSObserver(Handler(), smsadapter, context,Uri.parse("content://sms/"));
+        contentResolver = context!!.contentResolver
+        contentResolver.registerContentObserver(Uri.parse("content://sms/"), true, co)
+
+        viewModel.getSMS(context,viewModel.currentChat).observe(viewLifecycleOwner, Observer { smses ->
+            smsadapter.setData(smses)
+        })
+
         return view
 
 
@@ -62,28 +76,42 @@ class SecondFragment : Fragment() {
 
         val viewModel by activityViewModels<VM>();
 
-        layoutMenager=LinearLayoutManager(context)
-        layoutMenager.setReverseLayout(true)
-        smses=viewModel.getSMS(context,viewModel.currentChat);
-        smsadapter = smsAdapter(smses)
-
-        view.findViewById<RecyclerView>(R.id.messageList).apply {
-            adapter=smsadapter
-            layoutManager=layoutMenager
-        }
+        hashColor(!viewModel.hashState);
 
         view.findViewById<ImageButton>(R.id.return_btn).setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
 
+        view.findViewById<ImageButton>(R.id.sendMessageBtn).setOnClickListener {
+            var text = view.findViewById<TextInputEditText>(R.id.textInput).text.toString();
+            if(text != "" && text!="\n" && text.length>0){
+                view.findViewById<TextInputEditText>(R.id.textInput).clearFocus();
+                view.findViewById<TextInputEditText>(R.id.textInput).getText()?.clear();
+                smsTo(text);
+            }
+        }
+
+        view.findViewById<ImageButton>(R.id.hashButton).setOnClickListener {
+            hashColor(viewModel.hashState);
+            viewModel.hashState=!viewModel.hashState;
+        }
+
         view.findViewById<TextView>(R.id.toolbarText).text=viewModel.currentChat;
+    }
+
+    private fun hashColor(actual:Boolean){
+        if(actual){
+            view?.findViewById<ImageButton>(R.id.hashButton)?.style(R.style.hashOff)
+        }
+        else{
+            view?.findViewById<ImageButton>(R.id.hashButton)?.style(R.style.hashOn)
+        }
     }
 
     fun smsTo(message: String){
         val viewModel by activityViewModels<VM>();
         sendSMS(viewModel.currentChat,message);
-        smses=viewModel.getSMS(context,viewModel.currentChat);
-        smsadapter.notifyDataSetChanged();
+
     }
 
     private fun sendSMS(phoneNumber: String, message: String) {
@@ -91,8 +119,19 @@ class SecondFragment : Fragment() {
         SmsManager.getDefault().sendTextMessage(phoneNumber, null, message, sentPI, null)
     }
 
+    override fun onPause() {
+        super.onPause()
+        contentResolver.unregisterContentObserver(co)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        contentResolver.registerContentObserver(Uri.parse("content://sms/"), true, co)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        contentResolver.unregisterContentObserver(co)
     }
 }

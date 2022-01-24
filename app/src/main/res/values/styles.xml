@@ -25,4 +25,11 @@
         <item name="cardBackgroundColor">#8BC34A</item>
         <item name="layout_constraintHorizontal_bias">1</item>
     </style>
+
+    <style name="hashOn">
+        <item name="android:tint">#FF9800</item>
+    </style>
+    <style name="hashOff">
+        <item name="android:tint">#858585</item>
+    </style>
 </resources>

@@ -84,38 +84,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun makeRequest() {
         ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.READ_SMS),
+                arrayOf(Manifest.permission.READ_SMS,
+                    Manifest.permission.RECEIVE_SMS,
+                    Manifest.permission.SEND_SMS),
                 101)
-        ActivityCompat.requestPermissions(this,
-            arrayOf(Manifest.permission.RECEIVE_SMS),
-            102)
-        ActivityCompat.requestPermissions(this,
-            arrayOf(Manifest.permission.SEND_SMS),
-            103)
+
     }
     override fun onRequestPermissionsResult(requestCode: Int,
                                              permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             101 -> {
-
-                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
-                    Log.i("PermissionDemo", "Permission has been denied by user")
-                } else {
-                    Log.i("PermissionDemo", "Permission has been granted by user")
-                }
-            }
-            102 -> {
-
-                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
-                    Log.i("PermissionDemo", "Permission has been denied by user")
-                } else {
-                    Log.i("PermissionDemo", "Permission has been granted by user")
-                }
-            }
-            103 -> {
 
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
 

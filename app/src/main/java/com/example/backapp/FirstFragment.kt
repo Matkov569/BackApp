@@ -1,13 +1,14 @@
 package com.example.backapp
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.text.InputType.TYPE_CLASS_PHONE
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toolbar
+import android.widget.*
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,6 +52,29 @@ class FirstFragment : Fragment() {
         view.findViewById<RecyclerView>(R.id.contactsList).apply {
             adapter=contactsAdapter(contacts, viewModel)
             layoutManager=layoutMenager
+        }
+
+        view.findViewById<Button>(R.id.button_first).setOnClickListener {
+            var builder = AlertDialog.Builder(context);
+            builder.setTitle("Nowa wiadomość");
+            builder.setMessage("Podaj numer telefonu:");
+            val input = EditText(context)
+            input.inputType=TYPE_CLASS_PHONE;
+            builder.setView(input)
+            builder.setPositiveButton("Ok") { dialog, which ->
+                var number = input.text.toString();
+                if(number.length>=9) {
+                    viewModel.currentChat = number;
+                    findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+                }
+                else{
+                    Toast.makeText(context,"Wprowadź poprawny numer",Toast.LENGTH_LONG).show();
+                }
+            }
+            builder.setNegativeButton("Anuluj"){ dialog, which ->
+                //nic
+            }
+            builder.show()
         }
 
         view.findViewById<ImageButton>(R.id.return_btn).visibility=View.GONE;

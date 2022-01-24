@@ -1,5 +1,6 @@
 package com.example.backapp
 
+import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,9 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.paris.extensions.style
 
-class smsAdapter(val smses:List<sms>): RecyclerView.Adapter<smsAdapter.Holder>() {
+class smsAdapter(val context: Context?, val vm:VM): RecyclerView.Adapter<smsAdapter.Holder>() {
+
+    private var smses = emptyList<sms>();
 
     inner class Holder(itemView: View): RecyclerView.ViewHolder(itemView){
         val Tresc: TextView
@@ -37,8 +40,19 @@ class smsAdapter(val smses:List<sms>): RecyclerView.Adapter<smsAdapter.Holder>()
         }
         else {
             holder.Card.style(R.style.cardIn)
+            holder.Card.setCardBackgroundColor(Color.parseColor("#FF9800"));
         }
 
+    }
+
+    fun setData(sms:List<sms>){
+        this.smses=sms;
+        notifyDataSetChanged();
+    }
+
+    fun DataSetChanged(){
+        this.smses=vm.getSMS(context,vm.currentChat).value!!;
+        notifyDataSetChanged();
     }
 
     override fun getItemCount()=smses.count()

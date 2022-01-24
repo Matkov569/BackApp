@@ -4,13 +4,15 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class VM: ViewModel() {
 
     var currentChat:String = "";
+    var hashState:Boolean = false;
 
-    fun getSMS(context: Context?, person:String="null"):List<sms>{
+    fun getSMS(context: Context?, person:String="null"):LiveData<List<sms>>{
         val ret = mutableListOf<sms>();
         val uriSMSURIin = Uri.parse("content://sms/inbox")
         val cur: Cursor? = context?.contentResolver?.query(uriSMSURIin, null, null, null, null)
@@ -27,7 +29,7 @@ class VM: ViewModel() {
         val uriSMSURIout = Uri.parse("content://sms/sent")
         val cur2: Cursor? = context?.contentResolver?.query(uriSMSURIout, null, null, null, null)
         while (cur2 != null && cur2.moveToNext()) {
-            val time = cur2.getString(cur2.getColumnIndexOrThrow("date"))
+            val time = cur2.getString(cur2.getColumnIndexOrThrow("DATE"))
             val address = cur2.getString(cur2.getColumnIndexOrThrow("address"))
             val body = cur2.getString(cur2.getColumnIndexOrThrow("body"))
             if(person=="" || address==person)
@@ -39,7 +41,10 @@ class VM: ViewModel() {
 
         var retu = ret.sortedByDescending { it.time };
 
-        return retu as List<sms>;
+        var mld = MutableLiveData<List<sms>>();
+        mld.value=retu;
+
+        return mld as LiveData<List<sms>>;
     }
 
     fun getContacts(context: Context?):List<String>{
