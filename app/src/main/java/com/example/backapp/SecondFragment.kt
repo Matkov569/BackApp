@@ -69,8 +69,6 @@ class SecondFragment : Fragment() {
 
     }
 
-    lateinit var layoutMenager: LinearLayoutManager
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -108,9 +106,34 @@ class SecondFragment : Fragment() {
         }
     }
 
+    private fun superRoman(text: String):String{
+        val viewModel by activityViewModels<VM>();
+        var key:String;
+        if(viewModel.myPhone[0]=='+'){
+            key=viewModel.myPhone.substring(3);
+        }
+        else{
+            key=viewModel.myPhone;
+        }
+        var ret = "@\$!";
+        var ind=0;
+        for(i in text){
+            ret += Regex.escapeReplacement((i - key[ind].toString().toInt()).toString());
+
+            ind += 1;
+            ind %= key.length;
+        }
+        println(ret)
+        //ret+="!\$@";
+        return ret;
+    }
+
     fun smsTo(message: String){
         val viewModel by activityViewModels<VM>();
-        sendSMS(viewModel.currentChat,message);
+        if(viewModel.hashState)
+            sendSMS(viewModel.currentChat,superRoman(message));
+        else
+            sendSMS(viewModel.currentChat,message);
 
     }
 

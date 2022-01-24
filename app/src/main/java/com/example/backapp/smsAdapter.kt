@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.paris.extensions.style
 
@@ -33,7 +34,23 @@ class smsAdapter(val context: Context?, val vm:VM): RecyclerView.Adapter<smsAdap
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.Tresc.text=smses[position].body;
+        var isHashed=true;
+        if(smses[position].body.length >= 3
+            && smses[position].body.substring(0,3)=="@\$!"
+            //&& smses[position].body.substring(smses[position].body.length-3)=="!\$@"
+        ){
+            holder.Tresc.setOnClickListener {
+                if(isHashed) {
+                    var key = if(smses[position].sentOrReceived) vm.myPhone else smses[position].sender
+                    holder.Tresc.text = superUnRoman(smses[position].body, key);
+                    isHashed=false;
+                }
+            }
+        }
+        //else
+            holder.Tresc.text=smses[position].body;
+
+
         if(smses[position].sentOrReceived) {
             holder.Card.style(R.style.cardOut);
             holder.Card.setCardBackgroundColor(Color.parseColor("#8BC34A"));
@@ -53,6 +70,27 @@ class smsAdapter(val context: Context?, val vm:VM): RecyclerView.Adapter<smsAdap
     fun DataSetChanged(){
         this.smses=vm.getSMS(context,vm.currentChat).value!!;
         notifyDataSetChanged();
+    }
+
+    private fun superUnRoman(text: String, keyS: String):String{
+        var key:String;
+        if(keyS[0]=='+'){
+            key=keyS.substring(3);
+        }
+        else{
+            key=keyS;
+        }
+        var crop = text.substring(3);
+        //var crop = text.substring(0,text.length-3);
+        //crop = crop.substring(3);
+        var ret = "";
+        var ind=0;
+        for(i in crop){
+            ret += i + key[ind].toString().toInt();
+            ind += 1;
+            ind %= key.length;
+        }
+        return ret;
     }
 
     override fun getItemCount()=smses.count()

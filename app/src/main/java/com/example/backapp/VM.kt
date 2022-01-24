@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 class VM: ViewModel() {
 
     var currentChat:String = "";
+    var myPhone:String = "";
     var hashState:Boolean = false;
 
     fun getSMS(context: Context?, person:String="null"):LiveData<List<sms>>{

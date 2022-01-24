@@ -15,7 +15,11 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.content.ContextCompat
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.os.PersistableBundle
+import android.util.AttributeSet
+import android.view.View
 import androidx.core.app.ActivityCompat
 
 
@@ -28,8 +32,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        //binding = ActivityMainBinding.inflate(layoutInflater)
+        //setContentView(binding.root)
 
         //setSupportActionBar(binding.toolbar)
 
@@ -37,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         //appBarConfiguration = AppBarConfiguration(navController.graph)
         //setupActionBarWithNavController(navController, appBarConfiguration)
         setupPermissions()
+        setContentView(R.layout.activity_main)
 
     }
 
@@ -65,20 +70,20 @@ class MainActivity : AppCompatActivity() {
     private fun setupPermissions() {
         val permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_SMS)
-        val permission2 = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.RECEIVE_SMS)
-        val permission3 = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.SEND_SMS)
+        //val permission2 = ContextCompat.checkSelfPermission(this,
+         //   Manifest.permission.RECEIVE_SMS)
+        //val permission3 = ContextCompat.checkSelfPermission(this,
+         //   Manifest.permission.SEND_SMS)
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
             Log.i("PermissionDemo", "Permission to record denied")
         }
-        if (permission2 != PackageManager.PERMISSION_GRANTED) {
-            Log.i("PermissionDemo", "Permission to record denied")
-        }
-        if (permission3 != PackageManager.PERMISSION_GRANTED) {
-            Log.i("PermissionDemo", "Permission to record denied")
-        }
+        //if (permission2 != PackageManager.PERMISSION_GRANTED) {
+        //    Log.i("PermissionDemo", "Permission to record denied")
+        //}
+        //if (permission3 != PackageManager.PERMISSION_GRANTED) {
+        //    Log.i("PermissionDemo", "Permission to record denied")
+        //}
         makeRequest()
     }
 

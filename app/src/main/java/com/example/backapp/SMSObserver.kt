@@ -8,6 +8,8 @@ import android.net.Uri
 import android.os.Handler
 import android.provider.Telephony.TextBasedSmsColumns
 import android.provider.Telephony.TextBasedSmsColumns.*
+import android.media.MediaPlayer
+import android.provider.Settings
 
 
 class SMSObserver(var handler: Handler?, var adapter:smsAdapter, val context: Context?, val uri: Uri): ContentObserver(handler) {
@@ -37,6 +39,7 @@ class SMSObserver(var handler: Handler?, var adapter:smsAdapter, val context: Co
                     } else if (type == MESSAGE_TYPE_SENT) {
                         adapter.DataSetChanged();
                         println("SENT")
+
                     }
                     cursor.close();
                 }
