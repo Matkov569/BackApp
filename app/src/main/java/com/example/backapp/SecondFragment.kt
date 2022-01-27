@@ -45,7 +45,6 @@ class SecondFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_second,container,false)
-        //val listView: ListView = view.findViewById(R.id.messageList)
 
         val viewModel by activityViewModels<VM>();
 
@@ -65,9 +64,8 @@ class SecondFragment : Fragment() {
         })
 
         return view
-
-
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -109,12 +107,11 @@ class SecondFragment : Fragment() {
     private fun superRoman(text: String):String{
         val viewModel by activityViewModels<VM>();
         var key:String;
-        if(viewModel.myPhone[0]=='+'){
+        if(viewModel.myPhone[0]=='+')
             key=viewModel.myPhone.substring(3);
-        }
-        else{
+        else
             key=viewModel.myPhone;
-        }
+
         var ret = "@\$!";
         var ind=0;
         for(i in text){
@@ -123,8 +120,6 @@ class SecondFragment : Fragment() {
             ind += 1;
             ind %= key.length;
         }
-        println(ret)
-        //ret+="!\$@";
         return ret;
     }
 

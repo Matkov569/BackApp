@@ -43,5 +43,4 @@ class contactsAdapter(val contacts:List<String>, val vm:VM): RecyclerView.Adapte
     }
 
     override fun getItemCount()=contacts.count()
-
 }

@@ -24,9 +24,9 @@ class VM: ViewModel() {
             if(person=="null" || address==person)
                 ret.add(sms(time, body, address, false));
         }
-        if (cur != null) {
+        if (cur != null)
             cur.close()
-        }
+
         val uriSMSURIout = Uri.parse("content://sms/sent")
         val cur2: Cursor? = context?.contentResolver?.query(uriSMSURIout, null, null, null, null)
         while (cur2 != null && cur2.moveToNext()) {
@@ -36,15 +36,12 @@ class VM: ViewModel() {
             if(person=="" || address==person)
                 ret.add(sms(time, body, address, true));
         }
-        if (cur2 != null) {
+        if (cur2 != null)
             cur2.close()
-        }
 
         var retu = ret.sortedByDescending { it.time };
-
         var mld = MutableLiveData<List<sms>>();
         mld.value=retu;
-
         return mld as LiveData<List<sms>>;
     }
 
@@ -57,9 +54,9 @@ class VM: ViewModel() {
             if(!ret.contains(address))
                 ret.add(address);
         }
-        if (cur != null) {
+        if (cur != null)
             cur.close()
-        }
+
         val uriSMSURIout = Uri.parse("content://sms/sent")
         val cur2: Cursor? = context?.contentResolver?.query(uriSMSURIout, null, null, null, null)
         while (cur2 != null && cur2.moveToNext()) {
@@ -67,9 +64,9 @@ class VM: ViewModel() {
             if(!ret.contains(address))
                 ret.add(address);
         }
-        if (cur2 != null) {
+        if (cur2 != null)
             cur2.close()
-        }
+
         return ret as List<String>;
     }
 }

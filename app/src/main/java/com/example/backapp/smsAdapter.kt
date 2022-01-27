@@ -34,20 +34,13 @@ class smsAdapter(val context: Context?, val vm:VM): RecyclerView.Adapter<smsAdap
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        var isHashed=true;
         if(smses[position].body.length >= 3
             && smses[position].body.substring(0,3)=="@\$!"
-            //&& smses[position].body.substring(smses[position].body.length-3)=="!\$@"
         ){
-            holder.Tresc.setOnClickListener {
-                if(isHashed) {
-                    var key = if(smses[position].sentOrReceived) vm.myPhone else smses[position].sender
-                    holder.Tresc.text = superUnRoman(smses[position].body, key);
-                    isHashed=false;
-                }
-            }
+            var key = if(smses[position].sentOrReceived) vm.myPhone else smses[position].sender
+            holder.Tresc.text = superUnRoman(smses[position].body, key);
         }
-        //else
+        else
             holder.Tresc.text=smses[position].body;
 
 
@@ -81,8 +74,6 @@ class smsAdapter(val context: Context?, val vm:VM): RecyclerView.Adapter<smsAdap
             key=keyS;
         }
         var crop = text.substring(3);
-        //var crop = text.substring(0,text.length-3);
-        //crop = crop.substring(3);
         var ret = "";
         var ind=0;
         for(i in crop){

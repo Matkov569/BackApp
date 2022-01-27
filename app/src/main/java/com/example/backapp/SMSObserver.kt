@@ -12,7 +12,12 @@ import android.media.MediaPlayer
 import android.provider.Settings
 
 
-class SMSObserver(var handler: Handler?, var adapter:smsAdapter, val context: Context?, val uri: Uri): ContentObserver(handler) {
+class SMSObserver(
+    var handler: Handler?,
+    var adapter:smsAdapter,
+    val context: Context?,
+    val uri: Uri
+    ): ContentObserver(handler) {
 
     private var lastId:Int?=null;
     private var lastType:Int?=null;
