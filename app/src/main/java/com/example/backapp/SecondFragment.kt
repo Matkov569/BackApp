@@ -104,13 +104,12 @@ class SecondFragment : Fragment() {
         }
     }
 
-    private fun superRoman(text: String):String{
-        val viewModel by activityViewModels<VM>();
+    private fun superRoman(text: String, phone:String):String{
         var key:String;
-        if(viewModel.myPhone[0]=='+')
-            key=viewModel.myPhone.substring(3);
+        if(phone[0]=='+')
+            key=phone.substring(3);
         else
-            key=viewModel.myPhone;
+            key=phone;
 
         var ret = "@\$!";
         var ind=0;
@@ -126,7 +125,7 @@ class SecondFragment : Fragment() {
     fun smsTo(message: String){
         val viewModel by activityViewModels<VM>();
         if(viewModel.hashState)
-            sendSMS(viewModel.currentChat,superRoman(message));
+            sendSMS(viewModel.currentChat,superRoman(message,viewModel.myPhone));
         else
             sendSMS(viewModel.currentChat,message);
 
